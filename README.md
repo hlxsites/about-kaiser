@@ -1,9 +1,9 @@
-# Your Project's Title...
-Your project's description...
+# About Kaiser Permanente Website
+about.kaiserpermanente.org on helix
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.hlx.page/
-- Live: https://main--{repo}--{owner}.hlx.live/
+- Preview: https://main--about-kaiser--hlxsites.hlx.page/
+- Live: https://main--about-kaiser--hlxsites.hlx.live/
 
 ## Installation
 
