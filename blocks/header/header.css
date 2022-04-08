@@ -2,7 +2,7 @@
 header .nav {
   display: grid;
   grid-template:
-    "hamburger brand" 64px
+    "hamburger brand" 77px
     "sections sections" 1fr / 50px 1fr;
   align-items: center;
   padding: 0 2rem;
@@ -10,8 +10,9 @@ header .nav {
   z-index: 1;
   background-color: var(--background-color);
   width: 100vw;
-  height: 64px;
+  height: 77px;
   box-sizing: border-box;
+  box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.5);
 }
 
 /* hamburger */
@@ -88,6 +89,14 @@ header .nav-brand p {
   margin: 0;
 }
 
+header .nav-brand .icon {
+  height: 42px;
+}
+
+header .nav-brand .icon-kp-about {
+  display: none;
+}
+
 /* sections */
 header .nav-sections {
   grid-area: sections;
@@ -95,6 +104,10 @@ header .nav-sections {
   display: none;
   background-color: rgba(var(--background-color) / 92%);
   width: 100vw;
+}
+
+header .nav-sections a:any-link {
+  color: var(--text-color);
 }
 
 header .nav-sections h2 {
@@ -121,11 +134,21 @@ header .nav[aria-expanded='true'] {
 }
 
 /* desktop nav styles */
-@media (min-width: 900px) {
+@media (min-width: 1200px) {
   header .nav {
     grid-template-areas: 'brand sections';
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 500px 1fr;
+    height: 84px;
   }
+
+  header .nav-brand .icon-kp-about-mobile {
+    display: none;
+  }  
+
+  header .nav-brand .icon-kp-about {
+    display: unset;
+    height: 36px;
+  }  
 
   header .nav-hamburger {
     display: none;
