@@ -521,15 +521,23 @@ document.addEventListener('click', () => sampleRUM('click'));
 
 loadPage(document);
 
-function buildHeroBlock(main) {
-  const h1 = main.querySelector('h1');
-  const picture = main.querySelector('picture');
-  // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    const section = document.createElement('div');
-    section.append(buildBlock('hero', { elems: [picture, h1] }));
-    main.prepend(section);
-  }
+/**
+ * builds article header block from meta and default content.
+ * @param {Element} mainEl The container element
+ */
+function buildArticleHeader(mainEl) {
+  const div = document.createElement('div');
+  const h1 = mainEl.querySelector('h1');
+  const picture = mainEl.querySelector('picture');
+  const description = getMetadata('description');
+  const publicationDate = getMetadata('publication-date');
+
+  const articleHeaderBlockEl = buildBlock('article-header', [
+    [{ elems: [`<p>${publicationDate}</p>`, h1, `<p>${description}</p>`] }],
+    [{ elems: [picture.closest('p')] }],
+  ]);
+  div.append(articleHeaderBlockEl);
+  mainEl.prepend(div);
 }
 
 function loadHeader(header) {
@@ -552,7 +560,9 @@ function loadFooter(footer) {
  */
 function buildAutoBlocks(main) {
   try {
-    buildHeroBlock(main);
+    if (getMetadata('publication-date')) {
+      buildArticleHeader(main);
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
