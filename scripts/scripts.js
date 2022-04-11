@@ -521,6 +521,15 @@ document.addEventListener('click', () => sampleRUM('click'));
 
 loadPage(document);
 
+function getCaption(picture) {
+  const p = picture.closest('p');
+  const candidate = p.nextElementSibling;
+  if (candidate.textContent === candidate.querySelector('em').textContent) {
+    return (candidate);
+  }
+  return null;
+}
+
 /**
  * builds article header block from meta and default content.
  * @param {Element} mainEl The container element
@@ -531,10 +540,11 @@ function buildArticleHeader(mainEl) {
   const picture = mainEl.querySelector('picture');
   const description = getMetadata('description');
   const publicationDate = getMetadata('publication-date');
+  const caption = getCaption(picture);
 
   const articleHeaderBlockEl = buildBlock('article-header', [
     [{ elems: [`<p>${publicationDate}</p>`, h1, `<p>${description}</p>`] }],
-    [{ elems: [picture.closest('p')] }],
+    [{ elems: [picture.closest('p'), caption] }],
   ]);
   div.append(articleHeaderBlockEl);
   mainEl.prepend(div);

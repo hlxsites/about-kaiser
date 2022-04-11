@@ -1,13 +1,12 @@
 version: 1
-# See https://www.hlx.live/docs/setup-indexing.
 
 indices:
   site:
     include:
-      - '/mysite/**'
+      - '/**'
     exclude:
       - '**/Document.*'
-    # target: SharePoint URL of your query index, e.g. <shared-folder-url>/query-index.xlsx
+    target: /query-index.xlsx
     properties:
       author:
         select: head > meta[name="author"]
@@ -20,7 +19,7 @@ indices:
       date:
         select: head > meta[name="publication-date"]
         value: |
-          dateValue(attribute(el, 'content'), 'MM-DD-YYYY')
+          dateValue(attribute(el, 'content'), 'YYYY-MM-DD')
       image:
         select: head > meta[property="og:image"]
         value: |
@@ -35,10 +34,6 @@ indices:
           attribute(el, 'content')
       topics:
         select: head > meta[name="topics"]
-        value: |
-          attribute(el, 'content')
-      description:
-        select: head > meta[name="description"]
         value: |
           attribute(el, 'content')
       lastModified:
