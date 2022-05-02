@@ -12,10 +12,10 @@
 
  :root {
   /* colors */
-  --link-color: #2D69A1;
+  --link-color: #006ba6;
   --link-hover-color: #3D79B1;
   --background-color: #fff;
-  --overlay-background-color: #00000020;
+  --overlay-background-color: #eee;
   --highlight-background-color: #00000040;
   --text-color: #000;
 
@@ -38,6 +38,18 @@
   --heading-font-size-xs: 18px;
 }
 
+@media (min-width: 900px) {
+  :root {
+    --heading-font-size-xxl: 80px;
+    --heading-font-size-xl: 60px;
+    --heading-font-size-l: 48px;
+    --heading-font-size-m: 36px;
+    --heading-font-size-s: 28px;
+    --heading-font-size-xs: 22px;  
+  }
+}
+
+
 html {
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
@@ -47,10 +59,11 @@ body {
   font-size: var(--body-font-size-m);
   margin: 0;
   font-family: var(--body-font-family);
-  line-height: 1.6;
+  line-height: 1.16;
   color: var(--text-color);
   background-color: var(--background-color);
   display: none;
+  font-weight: 300;
 }
 
 body.appear {
@@ -73,13 +86,15 @@ main {
 
 h1, h2, h3,
 h4, h5, h6 {
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
-  margin-top: 1em;
-  margin-bottom: .5em;
+  margin: 0;
 }
 
-h1 { font-size: var(--heading-font-size-xxl) }
+h1 { 
+  font-size: var(--heading-font-size-xxl);
+  letter-spacing: -2px; 
+}
 h2 { font-size: var(--heading-font-size-xl) }
 h3 { font-size: var(--heading-font-size-l) }
 h4 { font-size: var(--heading-font-size-m) }
@@ -87,8 +102,7 @@ h5 { font-size: var(--heading-font-size-s) }
 h6 { font-size: var(--heading-font-size-xs) }
 
 p, dl, ol, ul, pre, blockquote {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin-top: 10px;
 }
 
 a:any-link {
@@ -114,7 +128,46 @@ pre {
   overflow: scroll;
 }
 
-main input, main button {
+/* buttons */
+
+a.button:any-link, button {
+  font-family: var(--font-family-body);
+  font-size: var(--body-font-size-s);
+  display: inline-block;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: 2px solid var(--link-color);
+  padding: 12px 15px;
+  min-width: 190px;
+  text-align: center;
+  font-style: normal; 
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--link-color);
+  margin: 16px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a.button:hover, a.button:focus, button:hover, button:focus  {
+  background-color: var(--link-hover-color);
+  cursor: pointer;
+  color: var(--background-color);
+}
+
+button:disabled, button:disabled:hover {
+  background-color: var(--overlay-background-color);
+  cursor: unset;
+}
+
+a.button.secondary, button.secondary {
+  background-color: unset;
+  border: 2px solid currentcolor;
+  color: var(--text-color)
+} 
+
+main input {
   font-size: 1.25rem;
   width: 100%;
   max-width: 50rem;
@@ -123,20 +176,6 @@ main input, main button {
   padding: 0.75rem 0.6rem;    
   border-radius: 0.25rem;
   box-sizing: border-box;
-}
-
-main button {
-  color: var(--background-color);
-  border: none;
-  background-color: var(--link-color);
-}
-
-main button:hover {
-  background-color: var(--link-hover-color);
-  cursor: pointer;
-}
-
-main input {
   border: 1px solid var(--text-color);
   color: var(--text-color);
   background-color: var(--background-color);
@@ -147,7 +186,7 @@ main input:hover {
 }
 
 main .section {
-  padding: 64px;
+  padding: 32px;
 }
 
 main pre {
@@ -187,28 +226,21 @@ main img {
   height: auto;
 }
 
+
+
 @media (min-width: 600px) {
   main {
     min-height: calc(100vh - 190px);
   }
 }
 
-@media (min-width: 900px) {
-  :root {
-    --heading-font-size-xxl: 60px;
-    --heading-font-size-xl: 48px;
-    --heading-font-size-l: 36px;
-    --heading-font-size-m: 30px;
-    --heading-font-size-s: 24px;
-    --heading-font-size-xs: 22px;  
-  }
-  
+@media (min-width: 900px) {  
   main {
     min-height: calc(100vh - 212px);
   }
 
   .section > div {
-    max-width: 800px;
+    max-width: 1300px;
     margin: auto;
   }
 }
@@ -221,4 +253,8 @@ main .section[data-section-status='initialized'] {
 
 main .section.highlight {
   background-color: var(--highlight-background-color);
+}
+
+main .section.overlay {
+  background-color: var(--overlay-background-color);
 }
