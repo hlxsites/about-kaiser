@@ -111,13 +111,81 @@ export function addPublishDependencies(url) {
 
 /**
  * Sanitizes a name for use as class name.
- * @param {*} name The unsanitized name
+ * @param {string} name The unsanitized name
  * @returns {string} The class name
  */
 export function toClassName(name) {
   return name && typeof name === 'string'
     ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-')
     : '';
+}
+
+/*
+ * Sanitizes a name for use as a js property name.
+ * @param {string} name The unsanitized name
+ * @returns {string} The camelCased name
+ */
+export function toCamelCase(name) {
+  return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+}
+
+/**
+ * Replace icons with inline SVG and prefix with codeBasePath.
+ * @param {Element} element
+ */
+function replaceIcons(element) {
+  element.querySelectorAll('img.icon').forEach((img) => {
+    const span = document.createElement('span');
+    span.className = img.className;
+    img.replaceWith(span);
+  });
+}
+
+/**
+ * Replace icons with inline SVG and prefix with codeBasePath.
+ * @param {Element} element
+ */
+export function decorateIcons(element) {
+  // prepare for forward compatible icon handling
+  replaceIcons(element);
+
+  element.querySelectorAll('span.icon').forEach((span) => {
+    const iconName = span.className.split('icon-')[1];
+    fetch(`${window.hlx.codeBasePath}/icons/${iconName}.svg`).then((resp) => {
+      if (resp.status === 200) resp.text().then((svg) => { span.innerHTML = svg; });
+    });
+  });
+}
+
+/**
+ * Gets placeholders object
+ * @param {string} prefix
+ */
+export async function fetchPlaceholders(prefix = 'default') {
+  window.placeholders = window.placeholders || {};
+  const loaded = window.placeholders[`${prefix}-loaded`];
+  if (!loaded) {
+    window.placeholders[`${prefix}-loaded`] = new Promise((resolve, reject) => {
+      try {
+        fetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
+          .then((resp) => resp.json())
+          .then((json) => {
+            const placeholders = {};
+            json.data.forEach((placeholder) => {
+              placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
+            });
+            window.placeholders[prefix] = placeholders;
+            resolve();
+          });
+      } catch (e) {
+        // error loading placeholders
+        window.placeholders[prefix] = {};
+        reject();
+      }
+    });
+  }
+  await window.placeholders[`${prefix}-loaded`];
+  return (window.placeholders[prefix]);
 }
 
 /**
@@ -436,6 +504,16 @@ export function decoratePictures(main) {
 }
 
 /**
+ * Set template (page structure) and theme (page styles).
+ */
+function decorateTemplateAndTheme() {
+  const template = getMetadata('template');
+  if (template) document.body.classList.add(template);
+  const theme = getMetadata('theme');
+  if (theme) document.body.classList.add(theme);
+}
+
+/**
  * Adds the favicon.
  * @param {string} href The favicon URL
  */
@@ -521,6 +599,20 @@ document.addEventListener('click', () => sampleRUM('click'));
 
 loadPage(document);
 
+function loadHeader(header) {
+  const headerBlock = buildBlock('header', '');
+  header.append(headerBlock);
+  decorateBlock(headerBlock);
+  loadBlock(headerBlock);
+}
+
+function loadFooter(footer) {
+  const footerBlock = buildBlock('footer', '');
+  footer.append(footerBlock);
+  decorateBlock(footerBlock);
+  loadBlock(footerBlock);
+}
+
 function getCaption(picture) {
   const p = picture.closest('p');
   const candidate = p.nextElementSibling;
@@ -550,20 +642,6 @@ function buildArticleHeader(mainEl) {
   mainEl.prepend(div);
 }
 
-function loadHeader(header) {
-  const headerBlock = buildBlock('header', '');
-  header.append(headerBlock);
-  decorateBlock(headerBlock);
-  loadBlock(headerBlock);
-}
-
-function loadFooter(footer) {
-  const footerBlock = buildBlock('footer', '');
-  footer.append(footerBlock);
-  decorateBlock(footerBlock);
-  loadBlock(footerBlock);
-}
-
 /**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
@@ -588,6 +666,8 @@ export function decorateMain(main) {
   decoratePictures(main);
   // forward compatible link rewriting
   makeLinksRelative(main);
+
+  decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
@@ -597,6 +677,7 @@ export function decorateMain(main) {
  * loads everything needed to get to LCP.
  */
 async function loadEager(doc) {
+  decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
