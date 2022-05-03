@@ -761,5 +761,9 @@ export async function lookupPages(config) {
     const pathnames = config;
     return (pathnames.map((path) => window.pageIndex.lookup[path]).filter((e) => e));
   }
+  if (config.tags) {
+    const filtered = window.pageIndex.data.filter((row) => row.tags.includes(config.tags));
+    return filtered;
+  }
   return [];
 }
