@@ -226,6 +226,14 @@ main img {
   height: auto;
 }
 
+main select {
+  background: transparent;
+  min-width: 200px;
+  padding: 12px 33px 12px 20px;
+  border: 1px solid grey;
+  border-radius: 3px;
+}
+
 
 
 @media (min-width: 600px) {
@@ -257,4 +265,13 @@ main .section.highlight {
 
 main .section.overlay {
   background-color: var(--overlay-background-color);
+}
+
+.article main .default-content-wrapper {
+  font-size: var(--body-font-size-s);
+  max-width: 800px;
+} 
+
+.article main .default-content-wrapper h2 {
+  font-size: var(--heading-font-size-m);
 }

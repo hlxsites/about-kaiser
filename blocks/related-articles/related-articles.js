@@ -13,12 +13,13 @@ export function createArticleCard(article, prefix) {
   };
 
   const date = article.date ? formatDate(toDate(article.date)) : '';
+  const [title] = article.title.split('|');
 
   const card = document.createElement('div');
   card.className = `${prefix}-card`;
   card.innerHTML = `
     <p class="${prefix}-card-date">${date}</p>
-    <h4>${article.title}</h4>
+    <h4>${title}</h4>
     <p class="${prefix}-card-description">${article.description}</p>`;
   const a = document.createElement('a');
   a.href = article.path;
@@ -32,6 +33,6 @@ export default async function decorate(block) {
   const pages = await lookupPages(pathnames);
   block.textContent = '';
   pages.forEach((page) => {
-    block.append(createArticleCard(page, 'related-articles-card'));
+    block.append(createArticleCard(page, 'related-articles'));
   });
 }

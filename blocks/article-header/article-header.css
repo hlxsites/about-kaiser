@@ -6,6 +6,10 @@ div.article-header-wrapper {
     max-width: 1200px;
 }
 
+.article-header h1 {
+    font-size: var(--heading-font-size-xl);
+}
+
 
 @media (min-width: 900px) {
     .article-header {

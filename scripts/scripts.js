@@ -647,7 +647,7 @@ function loadFooter(footer) {
 function getCaption(picture) {
   const p = picture.closest('p');
   const candidate = p.nextElementSibling;
-  if (candidate.textContent === candidate.querySelector('em').textContent) {
+  if (candidate && candidate.querySelector('em') && candidate.textContent === candidate.querySelector('em').textContent) {
     return (candidate);
   }
   return null;
@@ -679,11 +679,12 @@ function buildArticleHeader(mainEl) {
  */
 function buildAutoBlocks(main) {
   try {
-    const h1 = main.querySelector('h1');
-    if (h1) h1.closest('div').classList.add('overlay');
     if (getMetadata('publication-date')) {
       buildArticleHeader(main);
+      document.body.classList.add('article');
     }
+    const h1 = main.querySelector('h1');
+    if (h1) h1.closest('div').classList.add('overlay');
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
